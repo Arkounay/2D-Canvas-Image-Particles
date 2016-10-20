@@ -1,7 +1,7 @@
 module.exports = {
     entry: ['./src/Main.ts', './src/ParticleSystem.ts'],
     output: {
-        path: './build',
+        path: './dist',
         filename: '2d-canvas-image-particles.js',
     },
     resolve: {

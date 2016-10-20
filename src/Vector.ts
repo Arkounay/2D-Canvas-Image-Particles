@@ -1,8 +1,3 @@
-/**
- * Created by antonin on 18/10/2016.
- */
-
-
 export default class Vector {
 
     constructor(public x: number, public y: number) {
