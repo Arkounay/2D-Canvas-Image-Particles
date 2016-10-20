@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #js-canvas {
+            width: 100%;
+            height: 100%;
+            background-color: #1d1d1d;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="js-canvas"></canvas>
+<script src="debug/stats.min.js"> </script>
+<script src="build/2d-canvas-image-particles.js"></script>
+<script>
+    new ParticleSystem('js-canvas', 'images/default-particle.png');
+</script>
+</body>
+
+</html>
