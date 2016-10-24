@@ -1,6 +1,7 @@
 ///<reference path="ref/stats.ts"/>
 import Vector from "./Vector";
 import ParticleSystem from "./ParticleSystem";
+import {CursorMode} from "./CursorMode";
 
 let debug: boolean = typeof Stats !== 'undefined';
 if (debug) {
@@ -13,6 +14,10 @@ export var cursor = {
     position: new Vector(0, 0),
     radius: 100
 };
+
+window.addEventListener('mousemove', function(event) {
+    cursor.position.set(event.clientX, event.clientY);
+}, false);
 
 export var particleSystems: Array<ParticleSystem> = [];
 
@@ -45,4 +50,6 @@ let lastUpdate = Date.now();
 
 (<any>window).main();
 
+// export
 (<any>window).ParticleSystem = ParticleSystem;
+(<any>window).CursorMode = CursorMode;

@@ -16,5 +16,9 @@
     "typescript": "^2.0.3",
     "typings": "^1.4.0",
     "webpack": "^1.13.2"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.37",
+    "lodash": "^4.16.4"
   }
 }

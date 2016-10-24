@@ -83,4 +83,14 @@ export default class Vector {
         return this;
     }
 
+    public setAngle(degrees: number): Vector {
+        return this.setAngleRad(degrees * Math.PI / 180);
+    }
+
+    public setAngleRad(radians: number): Vector {
+        this.set(this.len(), 0);
+        this.rotateRad(radians);
+        return this;
+    }
+
 }
