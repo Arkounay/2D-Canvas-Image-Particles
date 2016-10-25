@@ -1,12 +1,6 @@
-# WIP
+# WIP!
 
 ## 2D Particle System using Canvas
-
-TODO :
-- [x] ~~handle multiple canvas~~
-- [ ] add more options
-- [ ] test on ie9
-- [ ] create example page
 
 ### Usage
 - Create a canvas with an id 
@@ -15,9 +9,19 @@ TODO :
 
 ### Options :
     {
-        maxParticles: 200,
-        velocityAngle: [0, 360],
-        cursorMode: CursorMode.Bounce
+        maxParticles: number,
+        velocityAngle: [min, max],
+        speed: [min, max],
+        rotationStartAngle: [min, max],
+        cursorMode: CursorMode      // (Bounce, Zoom, Light),
+        rotationMode: RotationMode,
+        rotationSpeed: [min, max],
+        tint: Tint                  // (new Tint('#hexColor', opacity)),
+        width: [min, max],
+        height: [min, max],
+        addOnClickNb: number,
+        density: number,
+        cursorRadius: number
     }
 
 #### Example

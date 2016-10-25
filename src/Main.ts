@@ -1,18 +1,22 @@
 ///<reference path="ref/stats.ts"/>
 import Vector from "./Vector";
 import ParticleSystem from "./ParticleSystem";
-import {CursorMode} from "./CursorMode";
+import {CursorMode} from "./Modes";
+import {RotationMode} from "./Modes";
+import Tint from "./Tint";
 
 let debug: boolean = typeof Stats !== 'undefined';
 if (debug) {
     var stats = new Stats();
     stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+    stats.domElement.style.position = 'fixed';
+    stats.domElement.style.bottom = '0';
+    stats.domElement.style.top = 'auto';
     document.body.appendChild(stats.dom);
 }
 
 export var cursor = {
     position: new Vector(0, 0),
-    radius: 100
 };
 
 window.addEventListener('mousemove', function(event) {
@@ -34,6 +38,10 @@ let lastUpdate = Date.now();
     lastUpdate = now;
 
     for (let particleSystem of particleSystems) {
+        particleSystem.preUpdate();
+    }
+
+    for (let particleSystem of particleSystems) {
         particleSystem.update(delta);
     }
 
@@ -52,4 +60,6 @@ let lastUpdate = Date.now();
 
 // export
 (<any>window).ParticleSystem = ParticleSystem;
+(<any>window).Tint = Tint;
 (<any>window).CursorMode = CursorMode;
+(<any>window).RotationMode = RotationMode;

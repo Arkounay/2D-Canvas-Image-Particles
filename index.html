@@ -4,23 +4,60 @@
     <meta charset="UTF-8">
     <title>Particles</title>
     <style>
-        #js-canvas, #js-canvas-2, #js-canvas-3 {
+        #js-canvas, #js-canvas-2, #js-canvas-3, #js-canvas-4 {
             width: 50%;
-            height: 50%;
+            height: 47.5%;
             background-color: #1d1d1d;
             position: fixed;
-            top: 0;
+            top: 5%;
             left: 0;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
         #js-canvas-2 {
             left: 50%;
-            height: 100%;
             background-color: #ececec;
         }
-
         #js-canvas-3 {
-            background-color: #8f1d1b;
-            top: 50%;
+            background: #540505;
+            background: -moz-linear-gradient(top, #540505 0%, #8f1d1b 100%);
+            background: -webkit-linear-gradient(top, #540505 0%,#8f1d1b 100%);
+            background: linear-gradient(to bottom, #540505 0%,#8f1d1b 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#540505', endColorstr='#8f1d1b',GradientType=0 );
+            top: 52.5%;
+        }
+        #js-canvas-4 {
+            background-color: #46738f;
+            left: 50%;
+            top: 52.5%;
+        }
+
+        * {
+            font-family: Arial, serif;
+        }
+
+        h1 {
+            position: fixed;
+            top: 0;
+            margin: 0;
+            text-align: center;
+            background-color: #f0f7df;
+            left: 0;
+            min-height: 5%;
+            display: block;
+            width: 100%;
+            color: #46738f;
+        }
+        a {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            background-color: white;
+            padding: 5px;
         }
     </style>
 </head>
@@ -29,14 +66,43 @@
 <canvas id="js-canvas"></canvas>
 <canvas id="js-canvas-2"></canvas>
 <canvas id="js-canvas-3"></canvas>
+<canvas id="js-canvas-4"></canvas>
+<h1>2D Canvas Image Particles Demo</h1>
+<a href="https://github.com/Arkounay/2D-Canvas-Image-Particles">Github</a>
 <script src="debug/stats.min.js"> </script>
+
+
 <script src="dist/2d-canvas-image-particles.js"></script>
 <script>
     new ParticleSystem('js-canvas', 'images/default-particle.png');
-    new ParticleSystem('js-canvas-2', 'images/default-particle-black.png');
-    new ParticleSystem('js-canvas-3', 'images/default-particle-black.png', {
+    new ParticleSystem('js-canvas-2', 'images/snow-particle.png', {
+        velocityAngle: [90, 125],
+        cursorMode: CursorMode.Light,
+        density: 5
+    });
+    new ParticleSystem('js-canvas-3', 'images/default-particle.png', {
         velocityAngle: [225, 315],
-        cursorMode: CursorMode.Zoom
+        cursorMode: CursorMode.Zoom,
+        tint: new Tint('#FFFF00', .7)
+    });
+    new ParticleSystem('js-canvas-4', 'images/default-particle.png', {
+        velocityAngle: [225, 315],
+        cursorMode: CursorMode.Bounce,
+        addOnClickNb: 0,
+        tint: new Tint('#3333AA', .7),
+        density: .5
+    });
+    new ParticleSystem('js-canvas-4', 'images/drop-particle.png', {
+        velocityAngle: [90, 110],
+        speed: [50, 100],
+        rotationMode: RotationMode.FollowVelocity,
+        rotationStartAngle: [270, 270],
+        cursorMode: CursorMode.Bounce,
+        width: [1, 2],
+        height: [16, 32],
+        addOnClickNb: 0,
+        density: 7,
+        cursorRadius: 30
     });
 </script>
 </body>

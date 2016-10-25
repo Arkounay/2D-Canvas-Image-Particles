@@ -72,16 +72,20 @@
 	///<reference path="ref/stats.ts"/>
 	var Vector_1 = __webpack_require__(3);
 	var ParticleSystem_1 = __webpack_require__(4);
-	var CursorMode_1 = __webpack_require__(8);
+	var Modes_1 = __webpack_require__(10);
+	var Modes_2 = __webpack_require__(10);
+	var Tint_1 = __webpack_require__(8);
 	var debug = typeof Stats !== 'undefined';
 	if (debug) {
 	    var stats = new Stats();
 	    stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+	    stats.domElement.style.position = 'fixed';
+	    stats.domElement.style.bottom = '0';
+	    stats.domElement.style.top = 'auto';
 	    document.body.appendChild(stats.dom);
 	}
 	exports.cursor = {
 	    position: new Vector_1.default(0, 0),
-	    radius: 100
 	};
 	window.addEventListener('mousemove', function (event) {
 	    exports.cursor.position.set(event.clientX, event.clientY);
@@ -98,11 +102,15 @@
 	    lastUpdate = now;
 	    for (var _i = 0, particleSystems_1 = exports.particleSystems; _i < particleSystems_1.length; _i++) {
 	        var particleSystem = particleSystems_1[_i];
+	        particleSystem.preUpdate();
+	    }
+	    for (var _a = 0, particleSystems_2 = exports.particleSystems; _a < particleSystems_2.length; _a++) {
+	        var particleSystem = particleSystems_2[_a];
 	        particleSystem.update(delta);
 	    }
 	    if (debug) {
-	        for (var _a = 0, particleSystems_2 = exports.particleSystems; _a < particleSystems_2.length; _a++) {
-	            var particleSystem = particleSystems_2[_a];
+	        for (var _b = 0, particleSystems_3 = exports.particleSystems; _b < particleSystems_3.length; _b++) {
+	            var particleSystem = particleSystems_3[_b];
 	            particleSystem.debug();
 	        }
 	        stats.end();
@@ -112,7 +120,9 @@
 	window.main();
 	// export
 	window.ParticleSystem = ParticleSystem_1.default;
-	window.CursorMode = CursorMode_1.CursorMode;
+	window.Tint = Tint_1.default;
+	window.CursorMode = Modes_1.CursorMode;
+	window.RotationMode = Modes_2.RotationMode;
 
 
 /***/ },
@@ -212,8 +222,9 @@
 	var Particle_1 = __webpack_require__(5);
 	var Main_1 = __webpack_require__(2);
 	var Vector_1 = __webpack_require__(3);
-	var Utils_1 = __webpack_require__(6);
-	var CursorMode_1 = __webpack_require__(8);
+	var Utils_1 = __webpack_require__(7);
+	var Tint_1 = __webpack_require__(8);
+	var Modes_1 = __webpack_require__(10);
 	/**
 	 * A Particle System.
 	 */
@@ -234,17 +245,19 @@
 	            _this.onResize();
 	        });
 	        this.onResize();
-	        this.canvas.addEventListener('click', function () {
-	            if (_this.particles !== undefined) {
-	                for (var i = 0; i < 5; i++) {
-	                    _this.particles.push(new Particle_1.default(_this, _this.cursorRelativeVector.x, _this.cursorRelativeVector.y, _this.image));
+	        this.image.onload = function () {
+	            _this.canvas.addEventListener('click', function () {
+	                if (_this.particles !== undefined) {
+	                    for (var i = 0; i < _this.options.addOnClickNb; i++) {
+	                        _this.particles.push(new Particle_1.default(_this, _this.cursorRelativeVector.x, _this.cursorRelativeVector.y, _this.image));
+	                    }
 	                }
+	            }, false);
+	            for (var i = 0; i < _this.canvas.width * _this.canvas.height / 20000 * _this.options.density; i++) {
+	                _this.particles.push(new Particle_1.default(_this, Math.random() * _this.canvas.width, Math.random() * _this.canvas.height, _this.image));
 	            }
-	        }, false);
-	        for (var i = 0; i < this.canvas.width * this.canvas.height / 41000; i++) {
-	            this.particles.push(new Particle_1.default(this, Math.random() * this.canvas.width, Math.random() * this.canvas.height, this.image));
-	        }
-	        Main.particleSystems.push(this);
+	            Main.particleSystems.push(_this);
+	        };
 	    }
 	    ParticleSystem.prototype.onResize = function () {
 	        // TODO Check IE
@@ -253,11 +266,16 @@
 	    };
 	    ;
 	    /**
+	     * Called before the context starts updating and drawing
+	     */
+	    ParticleSystem.prototype.preUpdate = function () {
+	        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+	    };
+	    /**
 	     * Update called by requestAnimationFrame.
 	     * @param delta - Delta Time
 	     */
 	    ParticleSystem.prototype.update = function (delta) {
-	        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	        this.cursorRelativeVector.set(Main_1.cursor.position.x - this.canvas.offsetLeft, Main_1.cursor.position.y - this.canvas.offsetTop);
 	        for (var i = this.particles.length - 1; i >= 0; i--) {
 	            var particle = this.particles[i];
@@ -266,22 +284,22 @@
 	            if (this.particles.length > this.options.maxParticles) {
 	                // remove particles that are off-screen if limit is reached
 	                // TODO : pool
-	                if (particle.position.x < -particle.defaultSize || particle.position.x > this.canvas.width + particle.defaultSize || particle.position.y < -particle.defaultSize || particle.position.y > this.canvas.height + particle.defaultSize) {
+	                if (particle.position.x < -particle.width || particle.position.x > this.canvas.width + particle.width || particle.position.y < -particle.height || particle.position.y > this.canvas.height + particle.height) {
 	                    particle.die();
 	                }
 	            }
 	            else {
 	                // move particle to the other edge of the screen
-	                if (particle.position.x < -particle.defaultSize) {
+	                if (particle.position.x < -particle.width) {
 	                    particle.position.x = this.canvas.width;
 	                }
-	                else if (particle.position.x > this.canvas.width + particle.defaultSize) {
+	                else if (particle.position.x > this.canvas.width + particle.width) {
 	                    particle.position.x = 0;
 	                }
-	                if (particle.position.y < -particle.defaultSize) {
+	                if (particle.position.y < -particle.height) {
 	                    particle.position.y = this.canvas.height;
 	                }
-	                else if (particle.position.y > this.canvas.height + particle.defaultSize) {
+	                else if (particle.position.y > this.canvas.height + particle.height) {
 	                    particle.position.y = 0;
 	                }
 	            }
@@ -296,16 +314,23 @@
 	    ParticleSystem.prototype.debug = function () {
 	        this.context.beginPath();
 	        this.context.fillStyle = "white";
-	        this.context.arc(this.cursorRelativeVector.x, this.cursorRelativeVector.y, Main_1.cursor.radius, 0, 2 * Math.PI);
+	        this.context.arc(this.cursorRelativeVector.x, this.cursorRelativeVector.y, this.options.cursorRadius, 0, 2 * Math.PI);
 	        this.context.stroke();
-	    };
-	    ParticleSystem.prototype.getCanvas = function () {
-	        return this.canvas;
 	    };
 	    ParticleSystem.defaults = {
 	        maxParticles: 200,
 	        velocityAngle: [0, 360],
-	        cursorMode: CursorMode_1.CursorMode.Bounce,
+	        speed: [2, 10],
+	        cursorMode: Modes_1.CursorMode.Bounce,
+	        rotationMode: Modes_1.RotationMode.Random,
+	        rotationStartAngle: [0, 360],
+	        rotationSpeed: [0, 360],
+	        tint: new Tint_1.default('#FFFFFF', 0),
+	        width: [8, 32],
+	        height: [8, 32],
+	        addOnClickNb: 5,
+	        density: 1,
+	        cursorRadius: 100
 	    };
 	    return ParticleSystem;
 	}());
@@ -319,57 +344,108 @@
 
 	"use strict";
 	var Vector_1 = __webpack_require__(3);
-	var Main = __webpack_require__(2);
-	var CursorMode_1 = __webpack_require__(8);
+	var Modes_1 = __webpack_require__(10);
+	var Utils_1 = __webpack_require__(7);
 	var Particle = (function () {
 	    function Particle(particleSystem, x, y, image) {
 	        this.alive = true;
 	        this.particleSystem = particleSystem;
+	        this.psOptions = particleSystem.options;
 	        var randomSize = Math.random();
-	        this.defaultSize = 8 + randomSize * 25;
-	        this.size = this.defaultSize;
+	        this.defaultWidth = this.psOptions.width[0] + randomSize * this.psOptions.width[1];
+	        this.defaultHeight = this.psOptions.height[0] + randomSize * this.psOptions.height[1];
+	        this.defaultSpeed = this.psOptions.speed[0] + Math.random() * (this.psOptions.speed[1] - this.psOptions.speed[0]);
+	        this.width = this.defaultWidth;
+	        this.height = this.defaultHeight;
 	        this.position = new Vector_1.default(x, y);
 	        this.velocity = new Vector_1.default(0, 0);
 	        this.setRandomVelocity();
-	        this.rotation = Math.random() * 360;
-	        this.rotationSpeed = 6 - randomSize * 5.5;
+	        this.defaultVelocity = this.velocity.cpy();
+	        this.defaultRotation = Utils_1.getRandomAngle(this.psOptions.rotationStartAngle[0], this.psOptions.rotationStartAngle[1]);
+	        this.rotation = this.defaultRotation;
+	        this.rotationSpeed = 6 - randomSize * 5.5; // TODO configurable
 	        this.image = image;
+	        // offscreen buffer
+	        this.tint = this.psOptions.tint.clone();
+	        if (this.tint.isActive() || this.psOptions.cursorMode == Modes_1.CursorMode.Light) {
+	            this.buffer = document.createElement('canvas');
+	            this.buffer.width = this.image.width;
+	            this.buffer.height = this.image.height;
+	            var tintedImage = this.buffer.getContext('2d');
+	            // fill offscreen buffer with the tint color
+	            tintedImage.fillStyle = this.tint.color;
+	            tintedImage.fillRect(0, 0, this.buffer.width, this.buffer.height);
+	            // destination atop makes a result with an alpha channel identical to the image, but with all pixels retaining their original color *as far as I can tell*
+	            tintedImage.globalCompositeOperation = "destination-atop";
+	            tintedImage.drawImage(this.image, 0, 0);
+	        }
 	    }
 	    Particle.prototype.setRandomVelocity = function () {
-	        this.velocity.set((Math.random() - .5) * Particle.MAX_SPEED, 0);
-	        var delta = ((this.particleSystem.options.velocityAngle[1] - this.particleSystem.options.velocityAngle[0] + 360 + 180) % 360) - 180;
-	        var angle = (this.particleSystem.options.velocityAngle[0] + delta * Math.random() + 360) % 360;
-	        this.velocity.setAngle(angle);
+	        this.velocity.set(this.defaultSpeed, 0);
+	        this.velocity.setAngle(Utils_1.getRandomAngle(this.psOptions.velocityAngle[0], this.psOptions.velocityAngle[1]));
 	    };
 	    Particle.prototype.update = function (delta) {
 	        this.position.add(this.velocity.x * delta, this.velocity.y * delta);
-	        this.rotation += this.rotationSpeed * delta;
+	        if (this.psOptions.rotationMode === Modes_1.RotationMode.FollowVelocity) {
+	            this.rotation = this.velocity.angle() + this.defaultRotation;
+	        }
+	        else if (this.psOptions.rotationMode === Modes_1.RotationMode.Random) {
+	            this.rotation += this.rotationSpeed * delta;
+	        }
+	        if (this.psOptions.rotationMode === Modes_1.RotationMode.FollowVelocity) {
+	            // return to normal after bounce
+	            var scl = .3 * delta;
+	            var bounceVelocity = this.defaultVelocity.cpy().scl(scl, scl);
+	            this.velocity.add(bounceVelocity.x, bounceVelocity.y).scl(1 - scl, 1 - scl);
+	        }
 	        var dst = this.position.dst(this.particleSystem.cursorRelativeVector.x, this.particleSystem.cursorRelativeVector.y);
-	        if (dst < Main.cursor.radius) {
+	        if (dst < this.psOptions.cursorRadius) {
 	            // when the cursor is near, bounce and move to the opposite side
-	            if (this.particleSystem.options.cursorMode == CursorMode_1.CursorMode.Bounce) {
+	            if (this.psOptions.cursorMode == Modes_1.CursorMode.Bounce) {
 	                var intersection = this.position.cpy().add(-this.particleSystem.cursorRelativeVector.x, -this.particleSystem.cursorRelativeVector.y);
 	                this.velocity.setRotation(intersection.angle());
 	                var scl = delta;
-	                if (dst > Main.cursor.radius * .9) {
+	                if (dst > this.psOptions.cursorRadius * .9) {
 	                    scl = delta * .2;
 	                }
 	                intersection.scl(scl, scl).add(this.position.x, this.position.y);
 	                this.position.set(intersection.x, intersection.y);
 	            }
-	            else {
+	            else if (this.psOptions.cursorMode == Modes_1.CursorMode.Zoom) {
 	                if (dst > 0) {
 	                    var maxSizeMultiplier = 2;
-	                    var maxSizeComputed = this.defaultSize * maxSizeMultiplier;
-	                    this.size = maxSizeComputed * Main.cursor.radius / dst / maxSizeMultiplier;
-	                    if (this.size >= maxSizeComputed) {
-	                        this.size = maxSizeComputed;
+	                    var maxWithComputed = this.defaultWidth * maxSizeMultiplier;
+	                    this.width = maxWithComputed * this.psOptions.cursorRadius / dst / maxSizeMultiplier;
+	                    if (this.width >= maxWithComputed) {
+	                        this.width = maxWithComputed;
 	                    }
+	                    var maxHeightComputed = this.defaultWidth * maxSizeMultiplier;
+	                    this.height = maxHeightComputed * this.psOptions.cursorRadius / dst / maxSizeMultiplier;
+	                    if (this.height >= maxHeightComputed) {
+	                        this.height = maxHeightComputed;
+	                    }
+	                }
+	            }
+	            else if (this.psOptions.cursorMode == Modes_1.CursorMode.Light) {
+	                if (dst === 0) {
+	                    this.tint.opacity = 1;
+	                }
+	                else {
+	                    this.tint.opacity = this.psOptions.cursorRadius / dst - 1;
+	                }
+	                if (this.tint.opacity > 1) {
+	                    this.tint.opacity = 1;
 	                }
 	            }
 	        }
 	        else {
-	            this.size = this.defaultSize;
+	            if (this.psOptions.cursorMode == Modes_1.CursorMode.Zoom) {
+	                this.width = this.defaultWidth;
+	                this.height = this.defaultHeight;
+	            }
+	            if (this.psOptions.cursorMode == Modes_1.CursorMode.Light) {
+	                this.tint.opacity = 0;
+	            }
 	        }
 	    };
 	    /**
@@ -380,7 +456,11 @@
 	        context.save();
 	        context.translate(this.position.x, this.position.y);
 	        context.rotate(this.rotation * Math.PI / 180);
-	        context.drawImage(this.image, -this.size / 2, -this.size / 2, this.size, this.size);
+	        context.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
+	        if (this.tint.isActive()) {
+	            context.globalAlpha = this.tint.opacity;
+	            context.drawImage(this.buffer, -this.width / 2, -this.height / 2, this.width, this.height);
+	        }
 	        context.restore();
 	    };
 	    Particle.prototype.die = function () {
@@ -393,7 +473,6 @@
 	        enumerable: true,
 	        configurable: true
 	    });
-	    Particle.MAX_SPEED = 12;
 	    return Particle;
 	}());
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -401,7 +480,8 @@
 
 
 /***/ },
-/* 6 */
+/* 6 */,
+/* 7 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -422,19 +502,60 @@
 	    return obj3;
 	}
 	exports.mergeObjects = mergeObjects;
+	function getRandomAngle(min, max) {
+	    var res;
+	    if (min === 0) {
+	        res = Math.random() * max;
+	    }
+	    else {
+	        var delta = ((max - min + 360 + 180) % 360) - 180;
+	        res = (min + delta * Math.random() + 360) % 360;
+	    }
+	    return res;
+	}
+	exports.getRandomAngle = getRandomAngle;
 
 
 /***/ },
-/* 7 */,
 /* 8 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var Tint = (function () {
+	    function Tint(color, opacity) {
+	        this.color = color;
+	        this.opacity = opacity;
+	    }
+	    Tint.prototype.isActive = function () {
+	        return this.opacity > 0;
+	    };
+	    Tint.prototype.clone = function () {
+	        return new Tint(this.color, this.opacity);
+	    };
+	    return Tint;
+	}());
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.default = Tint;
+
+
+/***/ },
+/* 9 */,
+/* 10 */
 /***/ function(module, exports) {
 
 	"use strict";
 	(function (CursorMode) {
 	    CursorMode[CursorMode["Bounce"] = 0] = "Bounce";
 	    CursorMode[CursorMode["Zoom"] = 1] = "Zoom";
+	    CursorMode[CursorMode["Light"] = 2] = "Light";
 	})(exports.CursorMode || (exports.CursorMode = {}));
 	var CursorMode = exports.CursorMode;
+	(function (RotationMode) {
+	    RotationMode[RotationMode["None"] = 0] = "None";
+	    RotationMode[RotationMode["Random"] = 1] = "Random";
+	    RotationMode[RotationMode["FollowVelocity"] = 2] = "FollowVelocity";
+	})(exports.RotationMode || (exports.RotationMode = {}));
+	var RotationMode = exports.RotationMode;
 
 
 /***/ }

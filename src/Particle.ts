@@ -1,14 +1,21 @@
 import Vector from './Vector';
 import * as Main from './Main';
 import ParticleSystem from "./ParticleSystem";
-import {CursorMode} from "./CursorMode";
+import Tint from "./Tint";
+import {CursorMode, RotationMode} from "./Modes";
+import {getRandomAngle} from "./Utils";
+import {PSOptionInterface} from "./PSOptionInterface";
 
 export default class Particle {
-    public static readonly MAX_SPEED = 12;
-    public readonly defaultSize: number;
+    public readonly defaultRotation: number;
+    public readonly defaultWidth: number;
+    public readonly defaultHeight: number;
+    public readonly defaultSpeed: number;
+    public readonly defaultVelocity: Vector;
     public position: Vector;
     public velocity: Vector;
-    public size: number;
+    public width: number;
+    public height: number;
 
     private particleSystem: ParticleSystem;
     private image: HTMLImageElement;
@@ -16,57 +23,113 @@ export default class Particle {
     private rotationSpeed: number;
     private alive: boolean = true;
 
+    private tint: Tint;
+    private buffer: HTMLCanvasElement;
+    private psOptions: PSOptionInterface;
+
     constructor(particleSystem: ParticleSystem, x: number, y: number, image: HTMLImageElement) {
         this.particleSystem = particleSystem;
+        this.psOptions = particleSystem.options;
         let randomSize = Math.random();
-        this.defaultSize = 8 + randomSize * 25;
-        this.size = this.defaultSize;
+        this.defaultWidth = this.psOptions.width[0] + randomSize * this.psOptions.width[1];
+        this.defaultHeight = this.psOptions.height[0] + randomSize * this.psOptions.height[1];
+        this.defaultSpeed = this.psOptions.speed[0] + Math.random() * (this.psOptions.speed[1] - this.psOptions.speed[0]);
+        this.width = this.defaultWidth;
+        this.height = this.defaultHeight;
         this.position = new Vector(x, y);
         this.velocity = new Vector(0, 0);
         this.setRandomVelocity();
-        this.rotation = Math.random() * 360;
-        this.rotationSpeed = 6 - randomSize * 5.5;
+        this.defaultVelocity = this.velocity.cpy();
+        this.defaultRotation = getRandomAngle(this.psOptions.rotationStartAngle[0], this.psOptions.rotationStartAngle[1]);
+        this.rotation = this.defaultRotation;
+        this.rotationSpeed = 6 - randomSize * 5.5; // TODO configurable
         this.image = image;
+
+        // offscreen buffer
+
+        this.tint = this.psOptions.tint.clone();
+        if (this.tint.isActive() || this.psOptions.cursorMode == CursorMode.Light) {
+            this.buffer = document.createElement('canvas');
+            this.buffer.width = this.image.width;
+            this.buffer.height = this.image.height;
+
+            let tintedImage = this.buffer.getContext('2d');
+            // fill offscreen buffer with the tint color
+            tintedImage.fillStyle = this.tint.color;
+            tintedImage.fillRect(0, 0, this.buffer.width, this.buffer.height);
+
+            // destination atop makes a result with an alpha channel identical to the image, but with all pixels retaining their original color *as far as I can tell*
+            tintedImage.globalCompositeOperation = "destination-atop";
+            tintedImage.drawImage(this.image, 0, 0);
+        }
     }
 
     public setRandomVelocity() {
-        this.velocity.set((Math.random() - .5) * Particle.MAX_SPEED, 0);
-        let delta = ((this.particleSystem.options.velocityAngle[1] - this.particleSystem.options.velocityAngle[0] + 360 + 180) % 360) - 180;
-        let angle = (this.particleSystem.options.velocityAngle[0] + delta * Math.random() + 360) % 360;
-        this.velocity.setAngle(angle);
+        this.velocity.set(this.defaultSpeed, 0);
+        this.velocity.setAngle(getRandomAngle(this.psOptions.velocityAngle[0], this.psOptions.velocityAngle[1]));
     }
 
     update(delta: number) {
         this.position.add(this.velocity.x * delta, this.velocity.y * delta);
-        this.rotation += this.rotationSpeed * delta;
 
+        if (this.psOptions.rotationMode === RotationMode.FollowVelocity) {
+            this.rotation = this.velocity.angle() + this.defaultRotation;
+        } else if (this.psOptions.rotationMode === RotationMode.Random) {
+            this.rotation += this.rotationSpeed * delta;
+        }
 
+        if (this.psOptions.rotationMode === RotationMode.FollowVelocity) {
+            // return to normal after bounce
+            let scl = .3 * delta;
+            let bounceVelocity = this.defaultVelocity.cpy().scl(scl, scl)
+            this.velocity.add(bounceVelocity.x, bounceVelocity.y).scl(1 - scl, 1 - scl);
+        }
 
         let dst = this.position.dst(this.particleSystem.cursorRelativeVector.x, this.particleSystem.cursorRelativeVector.y);
-        if (dst < Main.cursor.radius) {
+        if (dst < this.psOptions.cursorRadius) {
             // when the cursor is near, bounce and move to the opposite side
-            if (this.particleSystem.options.cursorMode == CursorMode.Bounce) {
+            if (this.psOptions.cursorMode == CursorMode.Bounce) {
                 let intersection = this.position.cpy().add(-this.particleSystem.cursorRelativeVector.x, -this.particleSystem.cursorRelativeVector.y);
                 this.velocity.setRotation(intersection.angle());
 
                 let scl = delta;
-                if (dst > Main.cursor.radius * .9) {
+                if (dst > this.psOptions.cursorRadius * .9) {
                     scl = delta * .2;
                 }
                 intersection.scl(scl, scl).add(this.position.x, this.position.y);
                 this.position.set(intersection.x, intersection.y);
-            } else {
+            } else if (this.psOptions.cursorMode == CursorMode.Zoom) {
                 if (dst > 0) {
                     let maxSizeMultiplier = 2;
-                    let maxSizeComputed = this.defaultSize * maxSizeMultiplier;
-                    this.size = maxSizeComputed * Main.cursor.radius / dst / maxSizeMultiplier;
-                    if (this.size >= maxSizeComputed) {
-                        this.size = maxSizeComputed;
+                    let maxWithComputed = this.defaultWidth * maxSizeMultiplier;
+                    this.width = maxWithComputed * this.psOptions.cursorRadius / dst / maxSizeMultiplier;
+                    if (this.width >= maxWithComputed) {
+                        this.width = maxWithComputed;
                     }
+                    let maxHeightComputed = this.defaultWidth * maxSizeMultiplier;
+                    this.height = maxHeightComputed * this.psOptions.cursorRadius / dst / maxSizeMultiplier;
+                    if (this.height >= maxHeightComputed) {
+                        this.height = maxHeightComputed;
+                    }
+                }
+            } else if (this.psOptions.cursorMode == CursorMode.Light) {
+                if (dst === 0) {
+                    this.tint.opacity = 1;
+                } else {
+                    this.tint.opacity = this.psOptions.cursorRadius / dst - 1;
+                }
+                if (this.tint.opacity > 1) {
+                    this.tint.opacity = 1;
                 }
             }
         } else {
-            this.size = this.defaultSize;
+            if (this.psOptions.cursorMode == CursorMode.Zoom) {
+                this.width = this.defaultWidth;
+                this.height = this.defaultHeight;
+            }
+            if (this.psOptions.cursorMode == CursorMode.Light) {
+                this.tint.opacity = 0;
+            }
         }
 
     }
@@ -80,7 +143,11 @@ export default class Particle {
         context.save();
         context.translate(this.position.x, this.position.y);
         context.rotate(this.rotation * Math.PI / 180);
-        context.drawImage(this.image, - this.size / 2, - this.size / 2, this.size, this.size);
+        context.drawImage(this.image, - this.width / 2, - this.height / 2, this.width, this.height);
+        if (this.tint.isActive()) {
+            context.globalAlpha = this.tint.opacity;
+            context.drawImage(this.buffer, - this.width / 2, - this.height / 2, this.width, this.height);
+        }
         context.restore();
     }
 
