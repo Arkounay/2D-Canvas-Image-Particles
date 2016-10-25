@@ -36,6 +36,8 @@
         });
     </script>
     
+You can check the [demo page](https://arkounay.github.io/2D-Canvas-Image-Particles/)'s sources for more exampes.
+    
 ### Build from sources
 - `npm install`
 - `npm run build`
