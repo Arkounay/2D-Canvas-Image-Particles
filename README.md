@@ -2,6 +2,8 @@
 
 ## 2D Particle System using Canvas
 
+[demo](https://arkounay.github.io/2D-Canvas-Image-Particles/)
+
 ### Usage
 - Create a canvas with an id 
 - Import dist/2d-canvas-image-particles.js
@@ -33,3 +35,7 @@
             cursorMode: CursorMode.Zoom
         });
     </script>
+    
+### Build from sources
+- `npm install`
+- `npm run build`
