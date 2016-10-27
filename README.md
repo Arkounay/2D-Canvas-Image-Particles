@@ -2,6 +2,12 @@
 
 ## 2D Particle System using Canvas
 
+A simple 2D particle system using Canvas.
+
+- Multiple particle systems can be bound to the same canvas
+- Works with 144hz monitors.
+
+
 [demo](https://arkounay.github.io/2D-Canvas-Image-Particles/)
 
 ### Usage

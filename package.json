@@ -6,7 +6,7 @@
   "scripts": {
     "prepublish": "typings install",
     "watch": "webpack --watch",
-    "build": "webpack --build"
+    "build": "webpack --build --optimize-minimize"
   },
   "keywords": [],
   "author": "",
