@@ -46,7 +46,6 @@ export default class Particle {
         this.image = image;
 
         // offscreen buffer
-
         this.tint = this.psOptions.tint.clone();
         if (this.tint.isActive() || this.psOptions.cursorMode == CursorMode.Light) {
             this.buffer = document.createElement('canvas');
