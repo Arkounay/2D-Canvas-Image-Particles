@@ -1,6 +1,6 @@
-import * as Main from './Main';
-import Particle from "./Particle";
+import * as Main from "./Main";
 import {cursor} from "./Main";
+import Particle from "./Particle";
 import Vector from "./Vector";
 import {mergeObjects} from "./Utils";
 import Tint from "./Tint";
@@ -38,7 +38,6 @@ export default class ParticleSystem {
         this.context = this.canvas.getContext('2d');
         this.image.src = image;
         this.options = mergeObjects(ParticleSystem.defaults, options);
-        console.log(this.options.velocityAngle);
 
         window.addEventListener('resize', () => {
             this.onResize();
@@ -54,13 +53,16 @@ export default class ParticleSystem {
                 }
             }, false);
 
-            for (let i = 0; i < this.canvas.width * this.canvas.height / 20000 * this.options.density; i++) {
-                this.particles.push(new Particle(this, Math.random() * this.canvas.width, Math.random() * this.canvas.height, this.image));
-            }
+            this.populate();
 
             Main.particleSystems.push(this);
         };
+    }
 
+    protected populate() {
+        for (let i = 0; i < this.canvas.width * this.canvas.height / 20000 * this.options.density; i++) {
+            this.particles.push(new Particle(this, Math.random() * this.canvas.width, Math.random() * this.canvas.height, this.image));
+        }
     }
 
     protected onResize() {

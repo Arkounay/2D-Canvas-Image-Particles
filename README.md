@@ -1,18 +1,16 @@
-# WIP!
+# 2D Particle System using Canvas
 
-## 2D Particle System using Canvas
-
-A simple 2D particle system using Canvas.
+A simple lightweight 2D particle system using Canvas.
 
 - Multiple particle systems can be bound to the same canvas
-- Works with 144hz monitors.
-
+- Particles speed remain the same regardless of the refreshing rate
+- Less than 10 KB
 
 [demo](https://arkounay.github.io/2D-Canvas-Image-Particles/)
 
-### Usage
+## Usage
 - Create a canvas with an id 
-- Import dist/2d-canvas-image-particles.js
+- Import dist/2d-canvas-image-particles.min.js
 - Create a new ParticleSystem : `new ParticleSystem(canvas_id, image_path, options);`
 
 ### Options :
@@ -32,10 +30,10 @@ A simple 2D particle system using Canvas.
         cursorRadius: number
     }
 
-#### Example
+### Example
     <canvas id="js-canvas"></canvas>
     
-    <script src="dist/2d-canvas-image-particles.js"></script>
+    <script src="dist/2d-canvas-image-particles.min.js"></script>
     <script>
         new ParticleSystem('js-canvas', 'images/default-particle.png', {
             cursorMode: CursorMode.Zoom
@@ -44,6 +42,6 @@ A simple 2D particle system using Canvas.
     
 You can check the [demo page](https://arkounay.github.io/2D-Canvas-Image-Particles/)'s sources for more examples.
     
-### Build from sources
+## Build from sources
 - `npm install`
 - `npm run build`

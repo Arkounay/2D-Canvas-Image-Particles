@@ -63,7 +63,7 @@ export default class Vector {
         return this.setRotationRad(degrees * Math.PI / 180)
     }
 
-    public setRotationRad (radians: number): Vector {
+    public setRotationRad(radians: number): Vector {
         this.set(this.len(), 0);
         this.rotateRad(radians);
 
