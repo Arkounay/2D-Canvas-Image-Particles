@@ -14,7 +14,7 @@ A simple lightweight 2D particle system using Canvas.
 - Import dist/2d-canvas-image-particles.min.js
 - Create a new ParticleSystem : `new ParticleSystem(canvas_id, image_path, options);`
 
-### Options :
+### Options
     {
         maxParticles: number,
         velocityAngle: [min, max],
@@ -50,8 +50,8 @@ You can check the [demo page](https://arkounay.github.io/2D-Canvas-Image-Particl
 
 #### Rotation Modes
 * RotationMode.**None**
-* RotationMode.**Random**:
-* RotationMode.**FollowVelocity** : Will follow the specified velocity (use it with _CursorMode.Bounce_ so the particles go back to their base velocity, this is used for the rain example)
+* RotationMode.**Random**
+* RotationMode.**FollowVelocity**: Will follow the specified velocity (use it with _CursorMode.Bounce_ so the particles go back to their base velocity, this is used for the rain example)
     
 ## Build from sources
 - `npm install`
