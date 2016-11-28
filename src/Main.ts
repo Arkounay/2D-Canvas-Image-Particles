@@ -37,6 +37,10 @@ let lastUpdate = Date.now();
     let delta = (now - lastUpdate) / 100;
     lastUpdate = now;
 
+    if (delta > 1) {
+        delta = 1;
+    }
+
     for (let particleSystem of particleSystems) {
         particleSystem.preUpdate();
     }
