@@ -1,5 +1,5 @@
 {
-  "name": "test-canvas",
+  "name": "2d-canvas-image-particles",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,17 +8,13 @@
     "watch": "webpack --watch",
     "build": "webpack --build --optimize-minimize"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["canvas", "particles"],
+  "author": "Antonin M",
   "license": "ISC",
   "devDependencies": {
     "ts-loader": "^0.9.4",
     "typescript": "^2.0.3",
     "typings": "^1.4.0",
     "webpack": "^1.13.2"
-  },
-  "dependencies": {
-    "@types/lodash": "^4.14.37",
-    "lodash": "^4.16.4"
   }
 }
