@@ -20,7 +20,7 @@ A simple lightweight 2D particle system using Canvas.
         velocityAngle: [min, max],
         speed: [min, max],
         rotationStartAngle: [min, max],
-        cursorMode: CursorMode      // (CursorMode.Bounce, CursorMode.Zoom, CursorMode.Light),
+        cursorMode: CursorMode,      // (CursorMode.Bounce, CursorMode.Zoom, CursorMode.Light),
         rotationMode: RotationMode, // (RotationMode.None, RotationMode.Random, RotationMode.FollowVelocity)
         rotationSpeed: [min, max],
         tint: new Tint('#hexColor', opacity),
