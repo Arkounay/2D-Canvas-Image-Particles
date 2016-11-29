@@ -20,7 +20,7 @@ export var cursor = {
 };
 
 window.addEventListener('mousemove', function(event) {
-    cursor.position.set(event.clientX + window.pageXOffset, event.clientY + window.pageYOffset);
+    cursor.position.set(event.clientX, event.clientY);
 }, false);
 
 export var particleSystems: Array<ParticleSystem> = [];

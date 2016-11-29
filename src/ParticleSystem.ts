@@ -29,6 +29,7 @@ export default class ParticleSystem {
     public readonly cursorRelativeVector = new Vector(0, 0);
     public readonly options:any = {};
     protected context;
+    protected canvasBoundingClient: ClientRect;
     protected canvas: HTMLCanvasElement;
     protected particles: Array<Particle> = []; // TODO : particle emitter
     protected image = new Image();
@@ -41,6 +42,9 @@ export default class ParticleSystem {
 
         window.addEventListener('resize', () => {
             this.onResize();
+        });
+        window.addEventListener('scroll', () => {
+            this.onScroll();
         });
         this.onResize();
 
@@ -65,10 +69,15 @@ export default class ParticleSystem {
         }
     }
 
+    protected onScroll() {
+        this.canvasBoundingClient = this.canvas.getBoundingClientRect();
+    }
+
     protected onResize() {
         // TODO Check IE
         this.canvas.width = this.canvas.clientWidth;
         this.canvas.height = this.canvas.clientHeight;
+        this.canvasBoundingClient = this.canvas.getBoundingClientRect();
     };
 
     /**
@@ -83,7 +92,7 @@ export default class ParticleSystem {
      * @param delta - Delta Time
      */
     public update(delta: number) {
-        this.cursorRelativeVector.set(cursor.position.x - this.canvas.offsetLeft, cursor.position.y - this.canvas.offsetTop);
+        this.cursorRelativeVector.set(cursor.position.x - this.canvasBoundingClient.left, cursor.position.y - this.canvasBoundingClient.top);
 
         for (let i = this.particles.length - 1; i >= 0; i--) {
             let particle = this.particles[i];
