@@ -42,7 +42,7 @@ export default class Particle {
         this.defaultVelocity = this.velocity.cpy();
         this.defaultRotation = getRandomAngle(this.psOptions.rotationStartAngle[0], this.psOptions.rotationStartAngle[1]);
         this.rotation = this.defaultRotation;
-        this.rotationSpeed = 6 - randomSize * 5.5; // TODO configurable
+        this.rotationSpeed = 6 - randomSize * 5.5 * this.psOptions.rotationSpeed[0] + Math.random() * (this.psOptions.rotationSpeed[1] - this.psOptions.rotationSpeed[0]);
         this.image = image;
 
         // offscreen buffer

@@ -18,7 +18,7 @@ export default class ParticleSystem {
         cursorMode: CursorMode.Bounce,
         rotationMode: RotationMode.Random,
         rotationStartAngle: [0, 360],
-        rotationSpeed: [0, 360],
+        rotationSpeed: [1, 1],
         tint: new Tint('#FFFFFF', 0),
         width: [8, 32],
         height: [8, 32],
