@@ -1,3 +1,3 @@
-dist/ linguist-vendored
-debug/ linguist-vendored
+dist/* linguist-vendored
+debug/* linguist-vendored
 index.html linguist-vendored
