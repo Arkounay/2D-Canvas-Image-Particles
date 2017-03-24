@@ -135,4 +135,12 @@ export default class ParticleSystem {
         this.context.stroke();
     }
 
+    public destroy(): void {
+        delete Main.particleSystems[Main.particleSystems.indexOf(this)];
+    }
+
+    public static destroyAll(): void {
+        Main.particleSystems.splice(0);
+    }
+
 }
