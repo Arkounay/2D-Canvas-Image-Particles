@@ -14,23 +14,6 @@ A simple lightweight 2D particle system using Canvas.
 - Import dist/2d-canvas-image-particles.min.js
 - Create a new ParticleSystem : `new ParticleSystem(canvas_id, image_path, options);`
 
-### Options
-    {
-        maxParticles: number,
-        velocityAngle: [min, max],
-        speed: [min, max],
-        rotationStartAngle: [min, max],
-        cursorMode: CursorMode,     // (CursorMode.Bounce, CursorMode.Zoom, CursorMode.Light),
-        rotationMode: RotationMode, // (RotationMode.None, RotationMode.Random, RotationMode.FollowVelocity)
-        rotationSpeed: [min, max],
-        tint: new Tint('#hexColor', opacity),
-        width: [min, max],
-        height: [min, max],
-        addOnClickNb: number,
-        density: number,
-        cursorRadius: number
-    }
-
 ### Example
     <canvas id="js-canvas"></canvas>
     
@@ -42,6 +25,26 @@ A simple lightweight 2D particle system using Canvas.
     </script>
     
 You can check the [demo page](https://arkounay.github.io/2D-Canvas-Image-Particles/)'s sources for more examples.
+
+### Options
+    {
+        maxParticles: number,
+        velocityAngle: [min, max],
+        speed: [min, max],
+        rotationStartAngle: [min, max],
+        cursorMode: CursorMode,     // (CursorMode.Bounce, CursorMode.Zoom, CursorMode.Light),
+        rotationMode: RotationMode, // (RotationMode.None, RotationMode.Random, RotationMode.FollowVelocity)
+        rotationSpeed: [min, max],
+        rotationSpeedSizeScale: number
+        minimumRotationSpeed: number // if min is negative and max is positive
+        tint: new Tint('#hexColor', opacity),
+        width: [min, max],
+        height: [min, max],
+        addOnClickNb: number,
+        density: number,
+        cursorRadius: number
+    }
+
 
 #### Cursor Modes
 * CursorMode.**Bounce**: particles will bounce off the cursor.

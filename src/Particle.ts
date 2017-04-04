@@ -21,6 +21,7 @@ export default class Particle {
     private image: HTMLImageElement;
     private rotation: number; // degrés
     private rotationSpeed: number;
+    private minimumRotationSpeed: number;
     private alive: boolean = true;
 
     private tint: Tint;
@@ -42,7 +43,20 @@ export default class Particle {
         this.defaultVelocity = this.velocity.cpy();
         this.defaultRotation = getRandomAngle(this.psOptions.rotationStartAngle[0], this.psOptions.rotationStartAngle[1]);
         this.rotation = this.defaultRotation;
-        this.rotationSpeed = 6 - randomSize * 5.5 * this.psOptions.rotationSpeed[0] + Math.random() * (this.psOptions.rotationSpeed[1] - this.psOptions.rotationSpeed[0]);
+        this.rotationSpeed = this.psOptions.rotationSpeed[0] + Math.random() * (this.psOptions.rotationSpeed[1] - this.psOptions.rotationSpeed[0]);
+        this.minimumRotationSpeed = this.psOptions.minimumRotationSpeed;
+
+        // rotation affected by scale
+        this.rotationSpeed = this.rotationSpeed / (randomSize * this.psOptions.rotationSpeedSizeScale + 1);
+
+        // minimum rotation speed
+        if (this.rotationSpeed < 0 && this.rotationSpeed > -this.minimumRotationSpeed) {
+            this.rotationSpeed = -this.minimumRotationSpeed;
+        } else if (this.rotationSpeed > 0 && this.rotationSpeed < this.minimumRotationSpeed) {
+            this.rotationSpeed = this.minimumRotationSpeed;
+        }
+
+        console.log(this.rotationSpeed);
         this.image = image;
 
         // offscreen buffer
@@ -80,7 +94,7 @@ export default class Particle {
         if (this.psOptions.rotationMode === RotationMode.FollowVelocity) {
             // return to normal after bounce
             let scl = .3 * delta;
-            let bounceVelocity = this.defaultVelocity.cpy().scl(scl, scl)
+            let bounceVelocity = this.defaultVelocity.cpy().scl(scl, scl);
             this.velocity.add(bounceVelocity.x, bounceVelocity.y).scl(1 - scl, 1 - scl);
         }
 

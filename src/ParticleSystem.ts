@@ -18,7 +18,9 @@ export default class ParticleSystem {
         cursorMode: CursorMode.Bounce,
         rotationMode: RotationMode.Random,
         rotationStartAngle: [0, 360],
+        minimumRotationSpeed: 0,
         rotationSpeed: [1, 1],
+        rotationSpeedSizeScale: 1,
         tint: new Tint('#FFFFFF', 0),
         width: [8, 32],
         height: [8, 32],
@@ -64,7 +66,7 @@ export default class ParticleSystem {
     }
 
     protected populate() {
-        for (let i = 0; i < this.canvas.width * this.canvas.height / 20000 * this.options.density; i++) {
+        for (let i = 0; i < this.canvas.width * this.canvas.height / 20000 * this.options.density && i < this.options.maxParticles; i++) {
             this.particles.push(new Particle(this, Math.random() * this.canvas.width, Math.random() * this.canvas.height, this.image));
         }
     }

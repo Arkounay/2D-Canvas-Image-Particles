@@ -49,13 +49,14 @@
             border-right: 1px solid #46738f;
             border-top: 1px solid #46738f;
             border-radius: 0;
+            background-color: #46738f;
+            color: white;
         }
 
         .nav-tabs li a {
             padding: 5px 15px;
             transition: background-color 100ms;
         }
-
         .nav-tabs li a:hover {
             border-bottom: 1px solid #46738f;
             border-radius: 0;
@@ -78,6 +79,10 @@
                 border: 1px solid #46738f;
             }
         }
+
+        .label-white {
+            background-color: #56abcf;
+        }
     </style>
 
     <!--[if lt IE 9]>
@@ -86,8 +91,6 @@
     <![endif]-->
 </head>
 <body>
-
-<a href="https://github.com/Arkounay/2D-Canvas-Image-Particles"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
 
 <div class="container">
 
@@ -108,7 +111,8 @@
             <a href="#" role="tab" data-js="new ParticleSystem('canvas', 'images/snow-particle.png', {
     velocityAngle: [90, 125],
     cursorMode: CursorMode.Light,
-    rotationSpeed: [1, 2],
+    rotationSpeed: [5, 20],
+    rotationSpeedScale: 4,
     density: 5
 });">Rotation, light on hover</a></li>
         <li><a href="#" role="tab" data-js="new ParticleSystem('canvas', 'images/default-particle.png', {
@@ -139,7 +143,7 @@ new ParticleSystem('canvas', 'images/drop-particle.png', {
     </ul>
     <div class="edit-zone">
         <div id="editor">new ParticleSystem('canvas', 'images/default-particle.png');</div>
-        <button id="btn-edit" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-refresh"></span> Edit</button>
+        <button id="btn-edit" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-refresh"></span> Apply <span class="label label-white">Ctrl S</span> <span class="label label-white">Alt Enter</span></button>
     </div>
 
 
@@ -158,6 +162,20 @@ new ParticleSystem('canvas', 'images/drop-particle.png', {
         editor.getSession().setMode("ace/mode/javascript");
         editor.getSession().setUseWrapMode(true);
         editor.setShowPrintMargin(false);
+        editor.commands.addCommand({
+            name: 'apply',
+            bindKey: {win: "Ctrl-S", "mac": "Cmd-S"},
+            exec: function() {
+                refreshCanvas();
+            }
+        });
+        editor.commands.addCommand({
+            name: 'apply2',
+            bindKey: {win: "Alt-Enter", "mac": "Cmd-Enter"},
+            exec: function() {
+                refreshCanvas();
+            }
+        });
 
         function refreshCanvas() {
             ParticleSystem.destroyAll();
@@ -172,7 +190,7 @@ new ParticleSystem('canvas', 'images/drop-particle.png', {
         tabs.find('a').click(function () {
             tabs.find('li').removeClass('active');
             $(this).closest('li').addClass('active');
-            editor.setValue($(this).data('js'));
+            editor.setValue($(this).data('js'), -1);
             refreshCanvas();
         })
 

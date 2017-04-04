@@ -9,6 +9,8 @@ export interface PSOptionInterface {
     cursorMode: CursorMode,
     rotationMode: RotationMode,
     rotationSpeed: Array<number>,
+    rotationSpeedSizeScale: number,
+    minimumRotationSpeed: number,
     tint: Tint,
     width: Array<number>,
     height: Array<number>,
