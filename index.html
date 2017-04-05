@@ -23,7 +23,7 @@
         #canvas {
             width: 100%;
             height: 400px;
-            background-color: #46738f;
+            background-image: linear-gradient(60deg, #29323c 0%, #485563 100%);
             margin-bottom: 30px;
         }
 
@@ -105,7 +105,52 @@
     <canvas id="canvas"></canvas>
 
     <ul class="js-tabs nav nav-tabs small" role="tablist">
-        <li class="active"><a href="#" role="tab" data-js="new ParticleSystem('canvas', 'images/default-particle.png');">Default behaviour</a></li>
+    <li class="active">
+        <a href="#" role="tab" data-js="new ParticleSystem('canvas', 'images/nouveau/triangle.png', {
+    width: [5, 14],
+    height: [5, 14],
+    density: 0.1,
+    speed: [0, 7]
+});
+
+new ParticleSystem('canvas', 'images/nouveau/rond.png', {
+    width: [5, 14],
+    height: [5, 14],
+    density: 0.1,
+    speed: [0, 7]
+});
+
+new ParticleSystem('canvas', 'images/nouveau/line.png', {
+    width: [20, 30],
+    height: [20, 30],
+    density: 0.1,
+    speed: [0, 7]
+});
+
+new ParticleSystem('canvas', 'images/nouveau/more.png', {
+    width: [5, 14],
+    height: [5, 14],
+    density: 0.1,
+    speed: [0, 7]
+});
+
+new ParticleSystem('canvas', 'images/nouveau/rond2.png', {
+    width: [5, 14],
+    height: [5, 14],
+    density: 0.1,
+    speed: [0, 7]
+});
+
+new ParticleSystem('canvas', 'images/nouveau/losange.png', {
+    width: [5, 14],
+    height: [5, 14],
+    density: 0.1,
+    speed: [0, 7]
+});
+
+            ">Example</a></li>
+        <li><a href="#" role="tab" data-js="new ParticleSystem('canvas', 'images/default-particle.png');">Default behaviour</a></li>
+
         <li>
 
             <a href="#" role="tab" data-js="new ParticleSystem('canvas', 'images/snow-particle.png', {
@@ -142,7 +187,47 @@ new ParticleSystem('canvas', 'images/drop-particle.png', {
 });">Advanced</a></li>
     </ul>
     <div class="edit-zone">
-        <div id="editor">new ParticleSystem('canvas', 'images/default-particle.png');</div>
+        <div id="editor">new ParticleSystem('canvas', 'images/nouveau/triangle.png', {
+    width: [5, 14],
+    height: [5, 14],
+    density: 0.1,
+    speed: [0, 7]
+});
+
+new ParticleSystem('canvas', 'images/nouveau/rond.png', {
+    width: [5, 14],
+    height: [5, 14],
+    density: 0.1,
+    speed: [0, 7]
+});
+
+new ParticleSystem('canvas', 'images/nouveau/line.png', {
+    width: [20, 30],
+    height: [20, 30],
+    density: 0.1,
+    speed: [0, 7]
+});
+
+new ParticleSystem('canvas', 'images/nouveau/more.png', {
+    width: [5, 14],
+    height: [5, 14],
+    density: 0.1,
+    speed: [0, 7]
+});
+
+new ParticleSystem('canvas', 'images/nouveau/rond2.png', {
+    width: [5, 14],
+    height: [5, 14],
+    density: 0.1,
+    speed: [0, 7]
+});
+
+new ParticleSystem('canvas', 'images/nouveau/losange.png', {
+    width: [5, 14],
+    height: [5, 14],
+    density: 0.1,
+    speed: [0, 7]
+});</div>
         <button id="btn-edit" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-refresh"></span> Apply <span class="label label-white">Ctrl S</span> <span class="label label-white">Alt Enter</span></button>
     </div>
 
@@ -155,7 +240,47 @@ new ParticleSystem('canvas', 'images/drop-particle.png', {
 <script src="dist/2d-canvas-image-particles.min.js"></script>
 
 <script>
-    new ParticleSystem('canvas', 'images/default-particle.png');
+    new ParticleSystem('canvas', 'images/nouveau/triangle.png', {
+    width: [5, 14],
+    height: [5, 14],
+    density: 0.1,
+    speed: [0, 7]
+});
+
+new ParticleSystem('canvas', 'images/nouveau/rond.png', {
+    width: [5, 14],
+    height: [5, 14],
+    density: 0.1,
+    speed: [0, 7]
+});
+
+new ParticleSystem('canvas', 'images/nouveau/line.png', {
+    width: [20, 30],
+    height: [20, 30],
+    density: 0.1,
+    speed: [0, 7]
+});
+
+new ParticleSystem('canvas', 'images/nouveau/more.png', {
+    width: [5, 14],
+    height: [5, 14],
+    density: 0.1,
+    speed: [0, 7]
+});
+
+new ParticleSystem('canvas', 'images/nouveau/rond2.png', {
+    width: [5, 14],
+    height: [5, 14],
+    density: 0.1,
+    speed: [0, 7]
+});
+
+new ParticleSystem('canvas', 'images/nouveau/losange.png', {
+    width: [5, 14],
+    height: [5, 14],
+    density: 0.1,
+    speed: [0, 7]
+});
 
     $(function () {
         var editor = ace.edit("editor");
