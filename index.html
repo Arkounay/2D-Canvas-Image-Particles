@@ -66,7 +66,7 @@
             border-bottom: 1px solid #46738f;
         }
 
-        @media screen and (max-width: 640px) {
+        @media screen and (max-width: 720px) {
             .nav-tabs li {
                 margin: 5px 10px;
             }
@@ -115,7 +115,7 @@
     speed: [0, 7]
 });
 
-new ParticleSystem('canvas', 'images/rond.png', {
+new ParticleSystem('canvas', 'images/circle.png', {
     width: [5, 14],
     height: [5, 14],
     density: 0.1,
@@ -129,14 +129,14 @@ new ParticleSystem('canvas', 'images/line.png', {
     speed: [0, 7]
 });
 
-new ParticleSystem('canvas', 'images/more.png', {
+new ParticleSystem('canvas', 'images/plus.png', {
     width: [5, 14],
     height: [5, 14],
     density: 0.1,
     speed: [0, 7]
 });
 
-new ParticleSystem('canvas', 'images/rond2.png', {
+new ParticleSystem('canvas', 'images/circle-line.png', {
     width: [5, 14],
     height: [5, 14],
     density: 0.1,
@@ -190,47 +190,7 @@ new ParticleSystem('canvas', 'images/drop-particle.png', {
 });">Advanced</a></li>
     </ul>
     <div class="edit-zone">
-        <div id="editor">new ParticleSystem('canvas', 'images/triangle.png', {
-    width: [5, 14],
-    height: [5, 14],
-    density: 0.1,
-    speed: [0, 7]
-});
-
-new ParticleSystem('canvas', 'images/rond.png', {
-    width: [5, 14],
-    height: [5, 14],
-    density: 0.1,
-    speed: [0, 7]
-});
-
-new ParticleSystem('canvas', 'images/line.png', {
-    width: [20, 30],
-    height: [20, 30],
-    density: 0.1,
-    speed: [0, 7]
-});
-
-new ParticleSystem('canvas', 'images/more.png', {
-    width: [5, 14],
-    height: [5, 14],
-    density: 0.1,
-    speed: [0, 7]
-});
-
-new ParticleSystem('canvas', 'images/rond2.png', {
-    width: [5, 14],
-    height: [5, 14],
-    density: 0.1,
-    speed: [0, 7]
-});
-
-new ParticleSystem('canvas', 'images/losange.png', {
-    width: [5, 14],
-    height: [5, 14],
-    density: 0.1,
-    speed: [0, 7]
-});</div>
+        <div id="editor"></div>
         <button id="btn-edit" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-refresh"></span> Apply <span class="label label-white">Ctrl S</span> <span class="label label-white">Alt Enter</span></button>
     </div>
 
@@ -243,50 +203,9 @@ new ParticleSystem('canvas', 'images/losange.png', {
 <script src="dist/2d-canvas-image-particles.min.js"></script>
 
 <script>
-    new ParticleSystem('canvas', 'images/triangle.png', {
-    width: [5, 14],
-    height: [5, 14],
-    density: 0.1,
-    speed: [0, 7]
-});
-
-new ParticleSystem('canvas', 'images/rond.png', {
-    width: [5, 14],
-    height: [5, 14],
-    density: 0.1,
-    speed: [0, 7]
-});
-
-new ParticleSystem('canvas', 'images/line.png', {
-    width: [20, 30],
-    height: [20, 30],
-    density: 0.1,
-    speed: [0, 7]
-});
-
-new ParticleSystem('canvas', 'images/more.png', {
-    width: [5, 14],
-    height: [5, 14],
-    density: 0.1,
-    speed: [0, 7]
-});
-
-new ParticleSystem('canvas', 'images/rond2.png', {
-    width: [5, 14],
-    height: [5, 14],
-    density: 0.1,
-    speed: [0, 7]
-});
-
-new ParticleSystem('canvas', 'images/losange.png', {
-    width: [5, 14],
-    height: [5, 14],
-    density: 0.1,
-    speed: [0, 7]
-});
-
     $(function () {
         var editor = ace.edit("editor");
+        editor.$blockScrolling = Infinity
         editor.getSession().setMode("ace/mode/javascript");
         editor.getSession().setUseWrapMode(true);
         editor.setShowPrintMargin(false);
@@ -321,7 +240,13 @@ new ParticleSystem('canvas', 'images/losange.png', {
             editor.setValue($(this).data('js'), -1);
             refreshCanvas();
         })
+        editor.setValue($('.js-tabs li.active a').data('js'), -1);
+        refreshCanvas();
 
+        $('#canvas').after(particleStats.dom);
+        particleStats.domElement.style.position = 'relative';
+        particleStats.domElement.style.bottom = '83px';
+        particleStats.domElement.style.top = 'auto';
     });
 </script>
 

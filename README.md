@@ -59,3 +59,6 @@ You can check the [demo page](https://arkounay.github.io/2D-Canvas-Image-Particl
 ## Build from sources
 - `npm install`
 - `npm run build`
+
+## IE Support
+- IE9+ 

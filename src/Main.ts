@@ -9,10 +9,7 @@ let debug: boolean = typeof Stats !== 'undefined';
 if (debug) {
     var stats = new Stats();
     stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-    stats.domElement.style.position = 'fixed';
-    stats.domElement.style.bottom = '0';
-    stats.domElement.style.top = 'auto';
-    document.body.appendChild(stats.dom);
+    (<any>window).particleStats = stats;
 }
 
 export var cursor = {

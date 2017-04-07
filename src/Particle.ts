@@ -56,7 +56,6 @@ export default class Particle {
             this.rotationSpeed = this.minimumRotationSpeed;
         }
 
-        console.log(this.rotationSpeed);
         this.image = image;
 
         // offscreen buffer
