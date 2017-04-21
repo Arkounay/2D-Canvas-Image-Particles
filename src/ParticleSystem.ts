@@ -19,7 +19,7 @@ export default class ParticleSystem {
         rotationMode: RotationMode.Random,
         rotationStartAngle: [0, 360],
         minimumRotationSpeed: 0,
-        rotationSpeed: [1, 1],
+        rotationSpeed: [5, 5],
         rotationSpeedSizeScale: 1,
         tint: new Tint('#FFFFFF', 0),
         width: [8, 32],
