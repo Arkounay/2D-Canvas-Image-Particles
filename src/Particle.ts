@@ -150,9 +150,9 @@ export default class Particle {
                 let intersection = this.position.cpy().add(-this.particleSystem.cursorRelativeVector.x, -this.particleSystem.cursorRelativeVector.y);
                 this.velocity.setRotation(intersection.angle());
 
-                let scl = delta;
+                let scl = delta * 10;
                 if (dst > this.psOptions.cursorRadius * .9) {
-                    scl = delta * .2;
+                    scl *= .2;
                 }
                 intersection.scl(scl, scl).add(this.position.x, this.position.y);
                 this.position.set(intersection.x, intersection.y);
