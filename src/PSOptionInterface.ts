@@ -17,4 +17,7 @@ export interface PSOptionInterface {
     addOnClickNb: number,
     density: number,
     cursorRadius: number
+    particleLifeTime: number,
+    particlePreDieTime: number
+    particleCreationInterval: number
 }

@@ -27,6 +27,11 @@ export default class Particle {
     private tint: Tint;
     private buffer: HTMLCanvasElement;
     private psOptions: PSOptionInterface;
+    // Masth0
+    private lifeTime: number;
+    private currentTime: number;
+    private lifeOpacity: number;
+    private lifeScale: number;
 
     constructor(particleSystem: ParticleSystem, x: number, y: number, image: HTMLImageElement) {
         this.particleSystem = particleSystem;
@@ -45,6 +50,11 @@ export default class Particle {
         this.rotation = this.defaultRotation;
         this.rotationSpeed = this.psOptions.rotationSpeed[0] + Math.random() * (this.psOptions.rotationSpeed[1] - this.psOptions.rotationSpeed[0]);
         this.minimumRotationSpeed = this.psOptions.minimumRotationSpeed;
+        // New
+        this.lifeTime = 3;
+        this.currentTime = 0;
+        this.lifeOpacity = 1;
+        this.lifeScale = 1;
 
         // rotation affected by scale
         this.rotationSpeed = this.rotationSpeed / (randomSize * this.psOptions.rotationSpeedSizeScale + 1);
@@ -81,7 +91,43 @@ export default class Particle {
         this.velocity.setAngle(getRandomAngle(this.psOptions.velocityAngle[0], this.psOptions.velocityAngle[1]));
     }
 
+    /**
+     * Kill particle smoothly
+     * Called in update()
+     * @param delta
+     */
+    private fadeOutForDie (delta) {
+        // Increment time
+        this.currentTime += delta;
+        // Opacity
+        if (this.currentTime > this.lifeTime - 1) {
+            this.lifeOpacity -= delta;
+        }
+        // Limit opacity
+        if (this.lifeOpacity < 0) {
+            this.lifeOpacity = 0;
+        }
+        // Scale
+        if (this.currentTime > this.lifeTime - 1) {
+            this.lifeScale -= delta;
+        }
+        // Limit scale
+        if (this.lifeScale < 0) {
+            this.lifeScale = 0;
+        }
+        // It's time to kill
+        if (this.currentTime >= this.lifeTime) {
+            this.die();
+        }
+    }
+
     update(delta: number) {
+
+        // Kill particle smoothly
+        if (this.particleSystem.options.particleLifeTime > 0) {
+            this.fadeOutForDie(delta);
+        }
+
         this.position.add(this.velocity.x * delta, this.velocity.y * delta);
 
         if (this.psOptions.rotationMode === RotationMode.FollowVelocity) {
@@ -155,7 +201,9 @@ export default class Particle {
         context.save();
         context.translate(this.position.x, this.position.y);
         context.rotate(this.rotation * Math.PI / 180);
-        context.drawImage(this.image, - this.width / 2, - this.height / 2, this.width, this.height);
+        // Particle fadeOut
+        context.globalAlpha = this.lifeOpacity;
+        context.drawImage(this.image, - ((this.width / 2) * this.lifeScale), -((this.height / 2)* this.lifeScale), this.width * this.lifeScale, this.height * this.lifeScale);
         if (this.tint.isActive()) {
             context.globalAlpha = this.tint.opacity;
             context.drawImage(this.buffer, - this.width / 2, - this.height / 2, this.width, this.height);

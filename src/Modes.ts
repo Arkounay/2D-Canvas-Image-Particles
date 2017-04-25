@@ -1,5 +1,5 @@
 export enum CursorMode {
-    Bounce, Zoom, Light
+    Bounce, Zoom, Light, Follow
 }
 
 export enum RotationMode {
