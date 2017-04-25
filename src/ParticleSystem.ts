@@ -99,7 +99,7 @@ export default class ParticleSystem {
      */
     protected onFollow(cursorPosition: Vector) {
         if (!this.lastCursorPos.equals(cursorPosition)) {
-            for (let i = 0; i < this.options.maxParticles; i++) {
+            for (let i = 0; i < this.options.density; i++) {
                 let a = Math.random();
                 let b = Math.random();
                 if (a < b) {

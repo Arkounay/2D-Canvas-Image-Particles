@@ -32,7 +32,7 @@ You can check the [demo page](https://arkounay.github.io/2D-Canvas-Image-Particl
         velocityAngle: [min, max],
         speed: [min, max],
         rotationStartAngle: [min, max],
-        cursorMode: CursorMode,     // (CursorMode.Bounce, CursorMode.Zoom, CursorMode.Light),
+        cursorMode: CursorMode,     // (CursorMode.Bounce, CursorMode.Zoom, CursorMode.Light, CursorMode.Follow),
         rotationMode: RotationMode, // (RotationMode.None, RotationMode.Random, RotationMode.FollowVelocity)
         rotationSpeed: [min, max],
         rotationSpeedSizeScale: number
@@ -50,6 +50,7 @@ You can check the [demo page](https://arkounay.github.io/2D-Canvas-Image-Particl
 * CursorMode.**Bounce**: particles will bounce off the cursor.
 * CursorMode.**Zoom**: the closer the cursor is, the bigger the particles are.
 * CursorMode.**Light**: works with Tint. Particles will enlight when cursor is close.
+* CursorMode.**Follow**: generates particles that are following the cursor.
 
 #### Rotation Modes
 * RotationMode.**None**
