@@ -37,7 +37,7 @@ You can check the [demo page](https://arkounay.github.io/2D-Canvas-Image-Particl
         rotationSpeed: [min, max],
         rotationSpeedSizeScale: number
         minimumRotationSpeed: number // if min is negative and max is positive
-        tint: new Tint('#hexColor', opacity),
+        tints: [new Tint('#hexColor', opacity)],
         width: [min, max],
         height: [min, max],
         addOnClickNb: number,

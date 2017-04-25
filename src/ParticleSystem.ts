@@ -21,7 +21,7 @@ export default class ParticleSystem {
         minimumRotationSpeed: 0,
         rotationSpeed: [50, 50],
         rotationSpeedSizeScale: 1,
-        tint: new Tint('#FFFFFF', 0),
+        tints: [new Tint('#FFFFFF', 0)],
         width: [8, 32],
         height: [8, 32],
         addOnClickNb: 5,
@@ -29,7 +29,7 @@ export default class ParticleSystem {
         cursorRadius: 100,
         particleLifeTime: 0,
         particlePreDieTime: 1,
-        particleCreationInterval: 16 // Unit = ms
+        particleCreationThrottle: 16 // Unit = ms
     };
     public readonly cursorRelativeVector = new Vector(0, 0);
     public readonly options:any = {};
@@ -50,7 +50,7 @@ export default class ParticleSystem {
         // New
         this.lastCursorPos = new Vector(0, 0);
         this.timer = 0;
-        this.timerThrottle = this.options.particleCreationInterval / 1000;
+        this.timerThrottle = this.options.particleCreationThrottle / 1000;
 
         window.addEventListener('resize', () => {
             this.onResize();
@@ -100,7 +100,19 @@ export default class ParticleSystem {
     protected onFollow(cursorPosition: Vector) {
         if (!this.lastCursorPos.equals(cursorPosition)) {
             for (let i = 0; i < this.options.maxParticles; i++) {
-                this.particles.push(new Particle(this, cursor.position.x, cursor.position.y, this.image));
+                let a = Math.random();
+                let b = Math.random();
+                if (a < b) {
+                    // [a, b] = [b, a]; ES6 swap
+                    let tmp = a;
+                    a = b;
+                    b = tmp;
+                }
+                // b*R*sin(2*pi*a/b)).
+                // generate randomly within cursor radius
+                let x = this.cursorRelativeVector.x + b * this.options.cursorRadius * Math.cos(2 * Math.PI * a / b);
+                let y = this.cursorRelativeVector.y + b * this.options.cursorRadius * Math.sin(2 * Math.PI * a / b);
+                this.particles.push(new Particle(this, x, y, this.image));
             }
         }
     }

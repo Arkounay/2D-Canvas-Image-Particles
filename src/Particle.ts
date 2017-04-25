@@ -27,7 +27,6 @@ export default class Particle {
     private tint: Tint;
     private buffer: HTMLCanvasElement;
     private psOptions: PSOptionInterface;
-    // Masth0
     private lifeTime: number;
     private currentTime: number;
     private lifeOpacity: number;
@@ -50,8 +49,7 @@ export default class Particle {
         this.rotation = this.defaultRotation;
         this.rotationSpeed = this.psOptions.rotationSpeed[0] + Math.random() * (this.psOptions.rotationSpeed[1] - this.psOptions.rotationSpeed[0]);
         this.minimumRotationSpeed = this.psOptions.minimumRotationSpeed;
-        // New
-        this.lifeTime = 3;
+        this.lifeTime = this.psOptions.particleLifeTime;
         this.currentTime = 0;
         this.lifeOpacity = 1;
         this.lifeScale = 1;
@@ -69,7 +67,7 @@ export default class Particle {
         this.image = image;
 
         // offscreen buffer
-        this.tint = this.psOptions.tint.clone();
+        this.tint = this.psOptions.tints[Math.floor(Math.random() * this.psOptions.tints.length)].clone();
         if (this.tint.isActive() || this.psOptions.cursorMode == CursorMode.Light) {
             this.buffer = document.createElement('canvas');
             this.buffer.width = this.image.width;
@@ -138,7 +136,7 @@ export default class Particle {
 
         if (this.psOptions.rotationMode === RotationMode.FollowVelocity) {
             // return to normal after bounce
-            let scl = .3 * delta;
+            let scl = 3 * delta;
             let bounceVelocity = this.defaultVelocity.cpy().scl(scl, scl);
             this.velocity.add(bounceVelocity.x, bounceVelocity.y).scl(1 - scl, 1 - scl);
         }

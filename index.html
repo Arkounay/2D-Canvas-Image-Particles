@@ -57,6 +57,7 @@
             padding: 5px 15px;
             transition: background-color 100ms;
         }
+
         .nav-tabs li a:hover {
             border-bottom: 1px solid #46738f;
             border-radius: 0;
@@ -66,7 +67,7 @@
             border-bottom: 1px solid #46738f;
         }
 
-        @media screen and (max-width: 720px) {
+        @media screen and (max-width: 991px) {
             .nav-tabs li {
                 margin: 5px 10px;
             }
@@ -87,11 +88,10 @@
 
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
 </head>
 <body>
-    
+
 <a href="https://github.com/Arkounay/2D-Canvas-Image-Particles"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
 
 <div class="container">
@@ -107,8 +107,8 @@
     <canvas id="canvas"></canvas>
 
     <ul class="js-tabs nav nav-tabs small" role="tablist">
-    <li class="active">
-        <a href="#" role="tab" data-js="new ParticleSystem('canvas', 'images/triangle.png', {
+        <li class="active">
+            <a href="#" role="tab" data-js="new ParticleSystem('canvas', 'images/triangle.png', {
     width: [5, 14],
     height: [5, 14],
     density: 0.1,
@@ -154,30 +154,43 @@ new ParticleSystem('canvas', 'images/square.png', {
         <li><a href="#" role="tab" data-js="new ParticleSystem('canvas', 'images/default-particle.png');">Default behaviour</a></li>
 
         <li>
-
-            <a href="#" role="tab" data-js="new ParticleSystem('canvas', 'images/snow-particle.png', {
+            <a href="#" role="tab" data-background-style="linear-gradient(0, #71b4ff 0%, #cce5ff 100%)" data-js="new ParticleSystem('canvas', 'images/snow-particle.png', {
     velocityAngle: [90, 125],
     cursorMode: CursorMode.Light,
-    rotationSpeed: [5, 20],
-    rotationSpeedScale: 4,
+    rotationSpeed: [-400, 400],
+    rotationSpeedSizeScale: 4,
     density: 5
 });">Rotation, light on hover</a></li>
-        <li><a href="#" role="tab" data-js="new ParticleSystem('canvas', 'images/default-particle.png', {
+        <li>
+            <a href="#" role="tab" data-js="new ParticleSystem('canvas', 'images/default-particle.png', {
+    cursorMode: CursorMode.Follow,
+    width: [25, 150],
+    height: [25, 150],
+    cursorRadius: 10,
+    particleLifeTime: 1,
+    maxParticles: 1,
+    particleCreationThrottle: 0
+});">Mouse emit</a></li>
+        <li><a href="#" role="tab" data-background-style="none" data-js="new ParticleSystem('canvas', 'images/square.png', {
     velocityAngle: [225, 315],
+    height: [10, 16],
+    width: [10, 16],
     cursorMode: CursorMode.Zoom,
-    tint: new Tint('#FFFF00', .7)
-});">Custom tint, and zoom on hover</a></li>
+    addOnClickNb: 0,
+    density: 10,
+    tints: [new Tint('#FFFF00', 1), new Tint('#00FF00', 1), new Tint('#FF0000', 1), new Tint('#0000FF', 1)]
+});">Custom tints, and zoom on hover</a></li>
         <li><a href="#" role="tab" data-js="new ParticleSystem('canvas', 'images/default-particle.png', {
     velocityAngle: [225, 315],
     cursorMode: CursorMode.Bounce,
     addOnClickNb: 0,
-    tint: new Tint('#3333AA', .7),
+    tints: [new Tint('#3333AA', .7)],
     density: .5
 });
 
 new ParticleSystem('canvas', 'images/drop-particle.png', {
     velocityAngle: [90, 110],
-    speed: [50, 100],
+    speed: [500, 1000],
     rotationMode: RotationMode.FollowVelocity,
     rotationStartAngle: [270, 270],
     cursorMode: CursorMode.Bounce,
@@ -185,7 +198,7 @@ new ParticleSystem('canvas', 'images/drop-particle.png', {
     height: [16, 32],
     addOnClickNb: 0,
     density: 7,
-    tint: new Tint('#FFFFFF', .2),
+    tints: [new Tint('#FFFFFF', .2)],
     cursorRadius: 30
 });">Advanced</a></li>
     </ul>
@@ -212,14 +225,14 @@ new ParticleSystem('canvas', 'images/drop-particle.png', {
         editor.commands.addCommand({
             name: 'apply',
             bindKey: {win: "Ctrl-S", "mac": "Cmd-S"},
-            exec: function() {
+            exec: function () {
                 refreshCanvas();
             }
         });
         editor.commands.addCommand({
             name: 'apply2',
             bindKey: {win: "Alt-Enter", "mac": "Cmd-Enter"},
-            exec: function() {
+            exec: function () {
                 refreshCanvas();
             }
         });
@@ -233,17 +246,20 @@ new ParticleSystem('canvas', 'images/drop-particle.png', {
             refreshCanvas();
         });
 
+        var $canvas = $('#canvas');
         var tabs = $('.js-tabs');
         tabs.find('a').click(function () {
+            var $this = $(this);
             tabs.find('li').removeClass('active');
-            $(this).closest('li').addClass('active');
-            editor.setValue($(this).data('js'), -1);
+            $this.closest('li').addClass('active');
+            editor.setValue($this.data('js'), -1);
+            $canvas.css('background-image', $this.data('background-style') ? $this.data('background-style') : 'linear-gradient(60deg, #29323c 0%, #485563 100%)');
             refreshCanvas();
         })
         editor.setValue($('.js-tabs li.active a').data('js'), -1);
         refreshCanvas();
 
-        $('#canvas').after(particleStats.dom);
+        $canvas.after(particleStats.dom);
         particleStats.domElement.style.position = 'relative';
         particleStats.domElement.style.bottom = '83px';
         particleStats.domElement.style.top = 'auto';

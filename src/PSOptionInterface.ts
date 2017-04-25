@@ -11,7 +11,7 @@ export interface PSOptionInterface {
     rotationSpeed: Array<number>,
     rotationSpeedSizeScale: number,
     minimumRotationSpeed: number,
-    tint: Tint,
+    tints: Array<Tint>,
     width: Array<number>,
     height: Array<number>,
     addOnClickNb: number,
@@ -19,5 +19,5 @@ export interface PSOptionInterface {
     cursorRadius: number
     particleLifeTime: number,
     particlePreDieTime: number
-    particleCreationInterval: number
+    particleCreationThrottle: number
 }
