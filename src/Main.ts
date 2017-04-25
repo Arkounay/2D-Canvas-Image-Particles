@@ -12,7 +12,7 @@ if (debug) {
     (<any>window).particleStats = stats;
 }
 
-export var cursor = {
+export let cursor = {
     position: new Vector(0, 0),
 };
 
@@ -20,7 +20,7 @@ window.addEventListener('mousemove', function(event) {
     cursor.position.set(event.clientX, event.clientY);
 }, false);
 
-export var particleSystems: Array<ParticleSystem> = [];
+export let particleSystems: Array<ParticleSystem> = [];
 
 let lastUpdate = Date.now();
 
@@ -57,7 +57,7 @@ let lastUpdate = Date.now();
     }
 
     let now = Date.now();
-    let delta = (now - lastUpdate) / 100;
+    let delta = (now - lastUpdate) / 1000;
     lastUpdate = now;
 
     if (delta > 1) {

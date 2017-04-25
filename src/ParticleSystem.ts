@@ -14,19 +14,22 @@ export default class ParticleSystem {
     public static readonly defaults:PSOptionInterface = {
         maxParticles: 200,
         velocityAngle: [0, 360],
-        speed: [2, 10],
+        speed: [20, 100],
         cursorMode: CursorMode.Bounce,
         rotationMode: RotationMode.Random,
         rotationStartAngle: [0, 360],
         minimumRotationSpeed: 0,
-        rotationSpeed: [5, 5],
+        rotationSpeed: [50, 50],
         rotationSpeedSizeScale: 1,
         tint: new Tint('#FFFFFF', 0),
         width: [8, 32],
         height: [8, 32],
         addOnClickNb: 5,
         density: 1,
-        cursorRadius: 100
+        cursorRadius: 100,
+        particleLifeTime: 0,
+        particlePreDieTime: 1,
+        particleCreationInterval: 16 // Unit = ms
     };
     public readonly cursorRelativeVector = new Vector(0, 0);
     public readonly options:any = {};
@@ -35,12 +38,19 @@ export default class ParticleSystem {
     protected canvas: HTMLCanvasElement;
     protected particles: Array<Particle> = []; // TODO : particle emitter
     protected image = new Image();
+    protected lastCursorPos: Vector;
+    protected timer: number;
+    protected timerThrottle: number;
 
     public constructor(canvasElementId: string, image: string, options: {} = {}) {
         this.canvas = <HTMLCanvasElement> document.getElementById(canvasElementId);
         this.context = this.canvas.getContext('2d');
         this.image.src = image;
         this.options = mergeObjects(ParticleSystem.defaults, options);
+        // New
+        this.lastCursorPos = new Vector(0, 0);
+        this.timer = 0;
+        this.timerThrottle = this.options.particleCreationInterval / 1000;
 
         window.addEventListener('resize', () => {
             this.onResize();
@@ -59,7 +69,9 @@ export default class ParticleSystem {
                 }
             }, false);
 
-            this.populate();
+            if (this.options.cursorMode !== CursorMode.Follow) {
+                this.populate();
+            }
 
             Main.particleSystems.push(this);
         };
@@ -76,11 +88,22 @@ export default class ParticleSystem {
     }
 
     protected onResize() {
-        // TODO Check IE
         this.canvas.width = this.canvas.clientWidth;
         this.canvas.height = this.canvas.clientHeight;
         this.canvasBoundingClient = this.canvas.getBoundingClientRect();
     };
+
+    /**
+     *
+     * @param cursorPosition
+     */
+    protected onFollow(cursorPosition: Vector) {
+        if (!this.lastCursorPos.equals(cursorPosition)) {
+            for (let i = 0; i < this.options.maxParticles; i++) {
+                this.particles.push(new Particle(this, cursor.position.x, cursor.position.y, this.image));
+            }
+        }
+    }
 
     /**
      * Called before the context starts updating and drawing
@@ -94,7 +117,15 @@ export default class ParticleSystem {
      * @param delta - Delta Time
      */
     public update(delta: number) {
+        this.timer += delta;
         this.cursorRelativeVector.set(cursor.position.x - this.canvasBoundingClient.left, cursor.position.y - this.canvasBoundingClient.top);
+
+        if (this.options.cursorMode === CursorMode.Follow) {
+            if (this.timer > this.timerThrottle) {
+                this.onFollow(cursor.position);
+                this.timer = 0;
+            }
+        }
 
         for (let i = this.particles.length - 1; i >= 0; i--) {
             let particle = this.particles[i];
@@ -125,6 +156,8 @@ export default class ParticleSystem {
                 this.particles.splice(i, 1);
             }
         }
+
+        this.lastCursorPos.set(cursor.position.x, cursor.position.y);
     }
 
     /**

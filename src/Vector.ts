@@ -93,4 +93,8 @@ export default class Vector {
         return this;
     }
 
+    public equals(vector: Vector): boolean {
+        return this.x === vector.x && this.y === vector.y;
+    }
+
 }
