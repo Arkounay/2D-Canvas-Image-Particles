@@ -98,7 +98,7 @@ export default class Particle {
         // Increment time
         this.currentTime += delta;
         // Opacity
-        if (this.currentTime > this.lifeTime - 1) {
+        if (this.currentTime > this.lifeTime - this.psOptions.particlePreDieTime) {
             this.lifeOpacity -= delta;
         }
         // Limit opacity
@@ -106,7 +106,7 @@ export default class Particle {
             this.lifeOpacity = 0;
         }
         // Scale
-        if (this.currentTime > this.lifeTime - 1) {
+        if (this.currentTime > this.lifeTime - this.psOptions.particlePreDieTime) {
             this.lifeScale -= delta;
         }
         // Limit scale
