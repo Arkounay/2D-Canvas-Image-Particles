@@ -10,7 +10,7 @@ A simple lightweight 2D particle system using Canvas.
 [Check the demo page](https://arkounay.github.io/2D-Canvas-Image-Particles/)
 
 ## Usage
-- Create a canvas with an id 
+- Create a canvas 
 - Import dist/2d-canvas-image-particles.min.js
 - Create a new ParticleSystem : `new ParticleSystem(canvas_id, image_path, options);`
 
@@ -25,6 +25,23 @@ A simple lightweight 2D particle system using Canvas.
     </script>
     
 You can check the [demo page](https://arkounay.github.io/2D-Canvas-Image-Particles/)'s sources for more examples.
+You can also use an HTMLCanvasElement instead of an id.
+
+### Usage with npm / Yarn
+
+`npm install 2d-canvas-image-particles` or `yarn add 2d-canvas-image-particles`.
+
+Then you can import it and use it
+
+```js
+import '2d-canvas-image-particles';
+// ...
+new ParticleSystem('id', 'images/default-particle.png', {
+    cursorMode: CursorMode.Zoom
+});
+```
+You will need to specify your own images.
+
 
 ### Options
     {
