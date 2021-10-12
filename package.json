@@ -8,6 +8,10 @@
     "watch": "webpack --watch",
     "build": "webpack --build --optimize-minimize"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Arkounay/2D-Canvas-Image-Particles"
+  },
   "keywords": ["canvas", "particles"],
   "author": "Arkounay",
   "license": "MIT",
