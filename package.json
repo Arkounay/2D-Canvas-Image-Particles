@@ -1,16 +1,16 @@
 {
   "name": "2d-canvas-image-particles",
-  "version": "1.0.3",
-  "description": "",
-  "main": "index.js",
+  "version": "1.0.4",
+  "description": "A simple lightweight 2D particle system using Canvas.",
+  "main": "dist/2d-canvas-image-particles.min.js",
   "scripts": {
     "prepublish": "typings install",
     "watch": "webpack --watch",
     "build": "webpack --build --optimize-minimize"
   },
   "keywords": ["canvas", "particles"],
-  "author": "Antonin M",
-  "license": "ISC",
+  "author": "Arkounay",
+  "license": "MIT",
   "devDependencies": {
     "ts-loader": "^0.9.4",
     "typescript": "^2.0.3",
