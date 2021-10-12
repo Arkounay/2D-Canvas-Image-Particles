@@ -42,8 +42,12 @@ export default class ParticleSystem {
     protected timer: number;
     protected timerThrottle: number;
 
-    public constructor(canvasElementId: string, image: string, options: {} = {}) {
-        this.canvas = <HTMLCanvasElement> document.getElementById(canvasElementId);
+    public constructor(canvas: string|HTMLCanvasElement, image: string, options: {} = {}) {
+        if (typeof canvas === 'string') {
+            this.canvas = <HTMLCanvasElement> document.getElementById(canvas);
+        } else {
+            this.canvas = canvas;
+        }
         this.context = this.canvas.getContext('2d');
         this.image.src = image;
         this.options = mergeObjects(ParticleSystem.defaults, options);
